@@ -1,0 +1,44 @@
+{
+    "cosmo": [
+        "om", "ob", "h", "ns",
+        "sigma8", "tau", "mnu",
+        "gamma_IG", "delta_IG",
+        "w0","wa"
+    ], 
+
+    "nuisance": [
+        "b0", "b1", "b2", "b3",
+        "b4", "b5", "b6", "b7",
+        "b8", "b9", "b10", 
+        "bM0", "bM1", "bM2", "bM3",
+        "bM4", "bM5", "bM6", "bM7",
+        "bM8", "bM9", "bM10", "bM11", 
+        "bM12", "bM13", 
+        "aIA", "eIA", "bIA",
+        "m0", "m1", "m2", "m3",
+        "m4", "m5", "m6", "m7",
+        "m8", "m9", "m10", "m11",
+        "m12", "m13"
+    ],
+
+    "shear_bias": [
+        "m0", "m1", "m2", "m3",
+        "m4", "m5", "m6", "m7",
+        "m8", "m9", "m10", "m11",
+        "m12", "m13"
+    ],
+
+    "all_but_shear_bias": [
+        "om", "ob", "h", "ns",
+        "sigma8", "tau", "mnu",
+        "gamma_IG", "delta_IG",
+        "b0", "b1", "b2", "b3",
+        "b4", "b5", "b6", "b7",
+        "b8", "b9", "b10",
+        "bM0", "bM1", "bM2", "bM3",
+        "bM4", "bM5", "bM6", "bM7",
+        "bM8", "bM9", "bM10", "bM11", 
+        "bM12", "bM13", 
+        "aIA", "eIA", "bIA"
+    ]
+} 

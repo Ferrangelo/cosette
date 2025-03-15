@@ -1,0 +1,19 @@
+[project]
+name = "cosette"
+version = "0.1.0"
+description = "A small package with a set of functions I often use. Using this repo as a chance to try uv."
+readme = "README.md"
+authors = [
+    { name = "Angelo Ferrari", email = "anferrar@bo.infn.it" }
+]
+requires-python = ">=3.13"
+dependencies = [
+    "numpy>=2.2.3",
+]
+
+[project.scripts]
+cosette = "cosette:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
