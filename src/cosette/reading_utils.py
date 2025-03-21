@@ -76,6 +76,8 @@ def read_sfx_class_cls_file(nbins, cl_filepath):
     ee = all_cl["ee"]
     te = all_cl["te"]
     pp = all_cl["pp"]
+    tp = all_cl["tp"]
+    ep = all_cl["ep"]
 
     td = {}
     dd_auto = {}
@@ -99,17 +101,17 @@ def read_sfx_class_cls_file(nbins, cl_filepath):
         td[bin1] = all_cl["td" + str(bin1)]
         dd_auto[bin1] = all_cl[("d" + str(bin1)) * 2]
         ll_auto[bin1] = all_cl[("l" + str(bin1)) * 2]
-        ii_auto[bin1] = all_cl[("i" + str(bin1)) * 2]
+        ii_auto[bin1] = all_cl.get(("i" + str(bin1)) * 2)
 
         for bin2 in range(bin1, nbins):
             dd[bin1][bin2] = all_cl["d" + str(bin1) + "d" + str(bin2)]
             ll[bin1][bin2] = all_cl["l" + str(bin1) + "l" + str(bin2)]
-            ii[bin1][bin2] = all_cl["i" + str(bin1) + "i" + str(bin2)]
+            ii[bin1][bin2] = all_cl.get("i" + str(bin1) + "i" + str(bin2))
 
         for bin2 in range(nbins):
             dl[bin1][bin2] = all_cl["d" + str(bin1) + "l" + str(bin2)]
-            di[bin1][bin2] = all_cl["d" + str(bin1) + "i" + str(bin2)]
-            il[bin1][bin2] = all_cl["i" + str(bin1) + "l" + str(bin2)]
+            di[bin1][bin2] = all_cl.get("d" + str(bin1) + "i" + str(bin2))
+            il[bin1][bin2] = all_cl.get("i" + str(bin1) + "l" + str(bin2))
 
     dict_cl = {
         "l": l,
@@ -118,6 +120,8 @@ def read_sfx_class_cls_file(nbins, cl_filepath):
         "ee": ee,
         "te": te,
         "pp": pp,
+        "tp": tp,
+        "ep": ep,
         "dd": dd,
         "ll": ll,
         "ii": ii,
