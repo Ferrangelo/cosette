@@ -164,3 +164,30 @@ def delete_burn_in(folder, file, burn_in):
         with open(file_path, "w") as f:
             f.write(header)  # Write header first
             f.writelines(selected_lines)  # Write selected lines
+
+def delete_before_last_hash_line(file_path):
+    """
+    Removes all lines before and including the last line that starts with '#'.
+    
+    Args:
+        file_path (str): Path to the file to be processed.
+    """
+    with open(file_path, 'r') as f:
+        lines = f.readlines()
+
+    # Find the last line index that starts with '#'
+    last_hash_index = -1
+    for i, line in enumerate(lines):
+        if line.lstrip().startswith('#'):
+            last_hash_index = i
+
+    # If no '#' line found, do nothing
+    if last_hash_index == -1:
+        return
+
+    # Remove everything up to and including the last '#' line
+    remaining = lines[last_hash_index + 1:]
+
+    with open(file_path, 'w') as f:
+        f.writelines(remaining)
+
