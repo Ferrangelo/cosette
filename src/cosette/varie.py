@@ -17,6 +17,7 @@ Note: More functions may be added to this module as the project evolves.
 import glob
 import json
 import os
+import shutil
 import sys
 from pathlib import Path
 
@@ -165,20 +166,21 @@ def delete_burn_in(folder, file, burn_in):
             f.write(header)  # Write header first
             f.writelines(selected_lines)  # Write selected lines
 
+
 def delete_before_last_hash_line(file_path):
     """
     Removes all lines before and including the last line that starts with '#'.
-    
+
     Args:
         file_path (str): Path to the file to be processed.
     """
-    with open(file_path, 'r') as f:
+    with open(file_path, "r") as f:
         lines = f.readlines()
 
     # Find the last line index that starts with '#'
     last_hash_index = -1
     for i, line in enumerate(lines):
-        if line.lstrip().startswith('#'):
+        if line.lstrip().startswith("#"):
             last_hash_index = i
 
     # If no '#' line found, do nothing
@@ -186,8 +188,79 @@ def delete_before_last_hash_line(file_path):
         return
 
     # Remove everything up to and including the last '#' line
-    remaining = lines[last_hash_index + 1:]
+    remaining = lines[last_hash_index + 1 :]
 
-    with open(file_path, 'w') as f:
+    with open(file_path, "w") as f:
         f.writelines(remaining)
 
+
+def cut_files_by_percentage(
+    folder_path, prefix, start_frac, end_frac, output_folder=None
+):
+    """
+    Read files with pattern prefix_1.txt, prefix_2.txt, etc. and create new files
+    with content cut by specified percentages. Useful to trim MCMC chains.
+
+    Parameters:
+    folder_path (str): Path to the folder containing the input files
+    prefix (str): Prefix for the file names
+    output_folder (str): Name of the new folder to create for output files
+    start_percent (float): Initial percentage of the file to cut (0-100)
+    end_percent (float): Final percentage of the file to cut (0-100)
+    """
+
+    if output_folder is None:
+        output_folder = folder_path + f"_cut_{start_frac}-{end_frac}"
+
+    # Create output folder if it doesn't exist
+    if not os.path.exists(output_folder):
+        os.makedirs(output_folder)
+
+        # Copy prefix.paramnames and log.param files without modification
+    additional_files = [f"{prefix}.paramnames", "log.param"]
+
+    for additional_file in additional_files:
+        source_path = os.path.join(folder_path, additional_file)
+        if os.path.exists(source_path):
+            dest_path = os.path.join(output_folder, additional_file)
+            shutil.copy2(source_path, dest_path)
+            print(f"Copied {additional_file}")
+        else:
+            print(f"Warning: {additional_file} not found in {folder_path}")
+
+    # Find all files matching the pattern prefix_*.txt
+    pattern = os.path.join(folder_path, f"{prefix}_*.txt")
+    files = glob.glob(pattern)
+
+    # Sort files to maintain order
+    files.sort(key=lambda x: int(x.split("_")[-1].split(".")[0]))
+
+    for file_path in files:
+        # Extract the file number from filename
+        filename = os.path.basename(file_path)
+        file_number = filename.split("_")[-1].split(".")[0]
+
+        # Read the original file
+        with open(file_path, "r") as f:
+            lines = f.readlines()
+
+        total_lines = len(lines)
+
+        # Calculate which lines to keep based on percentages
+        start_line = int(total_lines * start_frac)
+        end_line = int(total_lines * end_frac)
+
+        # Extract the desired portion
+        cut_lines = lines[start_line:end_line]
+
+        # Create output filename
+        output_filename = f"{prefix}_{file_number}.txt"
+        output_path = os.path.join(output_folder, output_filename)
+
+        # Write the cut content to new file
+        with open(output_path, "w") as f:
+            f.writelines(cut_lines)
+
+        print(
+            f"Processed {filename}: kept lines {start_line} to {end_line} ({len(cut_lines)} lines)"
+        )
